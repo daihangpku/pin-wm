@@ -26,19 +26,7 @@ ERROR = 40
 DISABLED = 50
 
 
-def prepare_output_and_logger(all_args,need_logger = False):    
-    if not all_args['sys_args']['output_path']:
-        if os.getenv('OAR_JOB_ID'):
-            unique_str=os.getenv('OAR_JOB_ID')
-        else:
-            unique_str = str(uuid.uuid4())
-        all_args['sys_args']['output_path'] = os.path.join("./output", unique_str[0:10])
-        
-    # Set up output folder
-    print("Output folder: {}".format(all_args['sys_args']['output_path']))
-    os.makedirs(all_args['sys_args']['output_path'], exist_ok = True)
-    with open(os.path.join(all_args['sys_args']['output_path'], "all_args"), 'w') as args_log_f:
-        args_log_f.write(str((all_args)))
+def prepare_output_and_logger(all_args, dynamic_train_datasets, need_logger = False):    
 
     loggers = {}
     if need_logger:
@@ -57,10 +45,9 @@ def prepare_output_and_logger(all_args,need_logger = False):
             os.makedirs(log_module_name_dir, exist_ok = True)
             if module_name == "dynamic":
                 loggers[module_name] = []
-                if "train_num" in all_args['data_args']:
-                    for index in range(all_args['data_args']["train_num"]):
-                        log_sub_dir = os.path.join(log_module_name_dir, str(index))
-                        loggers[module_name].append(configure_logger(log_sub_dir, format_strings))
+                for index in range(len(dynamic_train_datasets)):
+                    log_sub_dir = os.path.join(log_module_name_dir, str(index))
+                    loggers[module_name].append(configure_logger(log_sub_dir, format_strings))
             else:
                 loggers[module_name] = configure_logger(log_module_name_dir, format_strings)
 

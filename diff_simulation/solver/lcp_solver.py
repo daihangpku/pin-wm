@@ -47,6 +47,8 @@ class LCP_Solver:
             p_a,p_b = c[1],c[2]
             body1_index = self.simulator.get_body_list_index(contact_info[1])
             body2_index = self.simulator.get_body_list_index(contact_info[2])
+            # import ipdb
+            # ipdb.set_trace()
             J1 = torch.cat([torch.cross(p_a, normal), normal])
             J2 = - torch.cat([torch.cross(p_b, normal), normal])
             Jc[i, body1_index * self.simulator.velocity_dim:(body1_index + 1) * self.simulator.velocity_dim] = J1

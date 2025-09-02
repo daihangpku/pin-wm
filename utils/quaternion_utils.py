@@ -223,3 +223,19 @@ def quaternion_multiply_np(q1, q2):
     w3 = w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2
 
     return np.array([x3, y3, z3, w3])
+
+def dq_to_omega_tensor(q_current, q_next, dt, device="cuda"):
+    
+    q_current_conj = torch.tensor([q_current[0], -q_current[1], -q_current[2], -q_current[3]], device=device)
+
+    dq = torch.zeros(4, device=device)
+    dq[0] = q_next[0]*q_current_conj[0] - q_next[1]*q_current_conj[1] - q_next[2]*q_current_conj[2] - q_next[3]*q_current_conj[3]
+    dq[1] = q_next[0]*q_current_conj[1] + q_next[1]*q_current_conj[0] + q_next[2]*q_current_conj[3] - q_next[3]*q_current_conj[2]
+    dq[2] = q_next[0]*q_current_conj[2] - q_next[1]*q_current_conj[3] + q_next[2]*q_current_conj[0] + q_next[3]*q_current_conj[1]
+    dq[3] = q_next[0]*q_current_conj[3] + q_next[1]*q_current_conj[2] - q_next[2]*q_current_conj[1] + q_next[3]*q_current_conj[0]
+    
+    if dq[0] < 0:
+        dq = -dq  
+    
+    ee_angular_velocity = 2.0 * dq[1:4] / dt
+    return ee_angular_velocity

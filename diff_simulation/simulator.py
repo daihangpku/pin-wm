@@ -241,7 +241,6 @@ class Simulator(object):
         contact_infos1,vis_contact_points = self.collision_detection_pybullet()
         contact_infos2 = self.collision_detection_plane()
         contact_infos = contact_infos1 + contact_infos2
-
         x = self.solver.solve_constraint(contact_infos)
         new_velocitys = x[:self.velocity_dim * len(self.bodies)].squeeze(0)
         self.integrate_transform(new_velocitys)

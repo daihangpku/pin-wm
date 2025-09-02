@@ -82,7 +82,8 @@ def rendering_loss_batch(images,gt_images):
         loss = loss + lambda_loss * torch.abs((rgb.cuda() - gt_rgb.cuda())).mean()
     return loss/len(rgb)
 
-
+import sys, os
+sys.path.insert(0, os.getcwd())
 from utils.quaternion_utils import quaternion_multiply,xyzw2wxyz
 def pose_loss_batch(poses, gt_poses, lambda_position=1.0, lambda_rotation=1.0,xyzw=True):
     loss = 0.0
