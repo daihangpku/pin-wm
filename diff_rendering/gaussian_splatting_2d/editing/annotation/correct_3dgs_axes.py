@@ -10,10 +10,10 @@ import argparse
 from urdfpy import URDF
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.getcwd())
-from simulation.fast_gaussian_model_manager import construct_from_ply, axis_angle_to_quaternion, save_to_ply
+from fast_gaussian_model_manager import construct_from_ply, axis_angle_to_quaternion, save_to_ply
 
 def main(args):
-    rel2abs = np.load(os.path.join(os.path.dirname(args.input), "rel2abs.npz"))
+    rel2abs = np.load(args.rel2abs)
     scale, rot, trans = rel2abs["scale"], rel2abs["rot"], rel2abs["trans"]
     
     if args.input.endswith(".urdf"):
@@ -36,7 +36,9 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--input', type=str, default="/home/hwfan/workspace/twinmanip/outputs/component-20240914_175058_247/object_3dgs.ply")
+    parser.add_argument('--rel2abs', type=str, default=None)
     parser.add_argument("--device", type=str, default="cuda:0")
     args = parser.parse_args()
+    args.rel2abs = args.rel2abs if args.rel2abs is not None else os.path.join(os.path.dirname(args.input), "rel2abs.npz")
     main(args)
     
