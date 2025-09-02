@@ -84,6 +84,7 @@ def rendering_loss_batch(images,gt_images):
 
 import sys, os
 sys.path.insert(0, os.getcwd())
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../.."))
 from utils.quaternion_utils import quaternion_multiply,xyzw2wxyz
 def pose_loss_batch(poses, gt_poses, lambda_position=1.0, lambda_rotation=1.0,xyzw=True):
     loss = 0.0

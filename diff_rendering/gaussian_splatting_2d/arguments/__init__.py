@@ -87,6 +87,7 @@ class OptimizationParams(ParamGroup):
         self.lambda_dist = 100.0
         self.lambda_normal = 0.001
         self.lambda_opacity = 0.0001
+        self.lambda_alpha_mask = 10.0
         # self.lambda_normal = 0
         self.opacity_cull = 0.05
 
@@ -100,10 +101,10 @@ class OptimizationParams(ParamGroup):
 def get_combined_args(parser : ArgumentParser,output_static_2dgs_path):
     cmdlne_string = sys.argv[1:]
     cfgfile_string = "Namespace()"
-    # args_cmdline = parser.parse_args(cmdlne_string)
-    args_cmdline = parser.parse_args([])
+    args_cmdline = parser.parse_args(cmdlne_string)
+    # args_cmdline = parser.parse_args([])
     # import pdb;pdb.set_trace()
-    args_cmdline.model_path=output_static_2dgs_path
+    # args_cmdline.model_path=output_static_2dgs_path
     try:
         cfgfilepath = os.path.join(args_cmdline.model_path, "cfg_args")
         print("Looking for config file in", cfgfilepath)

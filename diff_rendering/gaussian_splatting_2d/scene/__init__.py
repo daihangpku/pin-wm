@@ -9,10 +9,11 @@
 # For inquiries contact  george.drettakis@inria.fr
 #
 
-import os
+import os, sys
 import random
 import json
 import importlib
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../.."))
 from diff_rendering.gaussian_splatting_2d.utils.system_utils import searchForMaxIteration
 from diff_rendering.gaussian_splatting_2d.scene.dataset_readers import sceneLoadTypeCallbacks
 from diff_rendering.gaussian_splatting_2d.scene.gaussian_model import GaussianModel
