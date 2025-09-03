@@ -172,7 +172,31 @@ def load_twinaligner_dataset(data_args):
         images = []
         for rgb_file in rgb_files:
             image_path = os.path.join(rgb_dir, rgb_file)
+            mask_path = image_path.replace('rgb', 'masks')
+            
+            # Load RGB image
             image = Image.open(image_path)
+            image_array = np.array(image)
+            
+            # Load mask if it exists
+            if os.path.exists(mask_path):
+                mask = Image.open(mask_path)
+                mask_array = np.array(mask)
+                
+                # Convert mask to binary (assuming mask is grayscale)
+                if len(mask_array.shape) == 3:
+                    mask_binary = (mask_array[:, :, 0] > 0).astype(np.uint8)
+                else:
+                    mask_binary = (mask_array > 0).astype(np.uint8)
+                
+                # Apply mask: set mask以外的部分 (background) to white
+                # mask_binary = 1 for object (keep original), 0 for background (set to white)
+                for c in range(image_array.shape[2]):
+                    image_array[:, :, c] = image_array[:, :, c] * mask_binary + 255 * (1 - mask_binary)
+                
+                # Convert back to PIL Image
+                image = Image.fromarray(image_array.astype(np.uint8))
+            
             # Convert PIL image to tensor (C, H, W) with values in [0, 1]
             image_tensor = torch.from_numpy(np.array(image)).permute(2, 0, 1).float() / 255.0
             images.append(image_tensor)
@@ -223,10 +247,8 @@ def create_camera_info_from_trajectory_data(trajectory_data, frame_idx, cam_id=0
     # pose is object-to-world, we need world-to-camera
     c2w = trajectory_data["cam_extrinsics"]
     w2c = np.linalg.inv(c2w)  # world-to-camera
-    
-    R = w2c[:3, :3].T  # Transpose for the expected format
-    T = w2c[:3, 3]
-    
+    R = w2c[:3, :3]  # Transpose for the expected format
+    T = c2w[:3, 3]
     # Get RGB image
     rgb_image = trajectory_data['rgb_images'][frame_idx]
     
@@ -256,6 +278,7 @@ def create_camera_info_from_trajectory_data(trajectory_data, frame_idx, cam_id=0
         FovY=fovy,
         FovX=fovx,
         image=image,
+        mask=None,
         image_path=f"frame_{frame_idx:06d}.png",
         image_name=f"frame_{frame_idx:06d}",
         width=width,

@@ -53,7 +53,7 @@ class Builder():
         #                                         "point_cloud",
         #                                         "iteration_" + str(loaded_iter),
         #                                         "point_cloud.ply")
-        gaussian_path = f"envs/asset/{self.data_args.object_name}/object_3dgs_abs.ply"
+        gaussian_path = f"diff_rendering/gaussian_splatting_2d/output/{self.data_args.object_name}/point_cloud/iteration_30000/point_cloud_abs.ply"
         gaussians = self.load_gaussian(gaussian_path)
         return gaussians
     

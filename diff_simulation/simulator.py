@@ -30,7 +30,7 @@ class Simulator(object):
         # self.space = ode.HashSpace()
         self.physicsClient = p.connect(p.GUI if vis else p.DIRECT)
         p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
-        p.resetDebugVisualizerCamera(cameraYaw=45.0,cameraPitch=-30,cameraDistance=0.5,cameraTargetPosition=[0.0,0.0,0.0])
+        p.resetDebugVisualizerCamera(cameraYaw=90.0,cameraPitch=-5,cameraDistance=0.5,cameraTargetPosition=[0.5,0.0,0.0])
 
     def add_body(self,body:Body):
         body_id = self.body_id_counter
