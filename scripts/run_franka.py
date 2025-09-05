@@ -188,10 +188,10 @@ def train_physical_materials(output_path,builder,obj_id,ee_id,dataset,simulator:
 def create_push_scene(all_args, builder, simulator: Simulator, obj_trans, obj_quat, ee_trans, ee_quat):
 
     plane_mesh_path = "./envs/asset/plane/plane_collision.obj"
-    obj_mesh_path = f"diff_rendering/gaussian_splatting_2d/output/{all_args.data_args.object_name}/train/ours_30000/fuse_post_abs.obj"
+    obj_mesh_path = f"diff_rendering/gaussian_splatting_2d/output/{all_args['data_args']['object_name']}/train/ours_30000/fuse_post_abs.obj"
     ee_mesh_path = "./envs/asset/ee/ee.obj"
     plane_urdf_path = "./envs/asset/plane/plane.urdf"
-    obj_urdf_path = f"diff_rendering/gaussian_splatting_2d/output/{all_args.data_args.object_name}/train/ours_30000/object.urdf"
+    obj_urdf_path = f"diff_rendering/gaussian_splatting_2d/output/{all_args['data_args']['object_name']}/train/ours_30000/object.urdf"
     ee_urdf_path = "./envs/asset/franka_ee/ee.urdf"
 
     plane_mesh = trimesh.load(plane_mesh_path)
