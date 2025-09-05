@@ -1,4 +1,4 @@
-import mmcv
+# import mmcv
 import torch
 import numpy as np
 import random
@@ -32,7 +32,7 @@ from diff_simulation.simulator import Simulator
 from diff_simulation.physical_material import Physical_Materials
 from diff_simulation.constraints.base import Joint_Type
 import matplotlib
-matplotlib.use('TkAgg')
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
@@ -73,7 +73,7 @@ def train_physical_materials(output_path,builder,obj_id,ee_id,dataset,simulator:
         images.clear()
         poses.clear()
         
-        for f in tqdm(range(f_max-1), 'processing frame'):
+        for f in range(f_max-1):
             print(f"Processing frame {f}")
             if f >= 0:
                 for i in range(int((timestamps[f+1] - timestamps[f]) / simulator.dtime)):
@@ -185,13 +185,13 @@ def train_physical_materials(output_path,builder,obj_id,ee_id,dataset,simulator:
 
     return final_loss
 
-def create_push_scene(builder,simulator:Simulator, obj_trans, obj_quat, ee_trans, ee_quat):
+def create_push_scene(all_args, builder, simulator: Simulator, obj_trans, obj_quat, ee_trans, ee_quat):
 
     plane_mesh_path = "./envs/asset/plane/plane_collision.obj"
-    obj_mesh_path = "diff_rendering/gaussian_splatting_2d/output/milk-box/train/ours_30000/fuse_post_abs.obj"
+    obj_mesh_path = f"diff_rendering/gaussian_splatting_2d/output/{all_args.data_args.object_name}/train/ours_30000/fuse_post_abs.obj"
     ee_mesh_path = "./envs/asset/ee/ee.obj"
     plane_urdf_path = "./envs/asset/plane/plane.urdf"
-    obj_urdf_path = "diff_rendering/gaussian_splatting_2d/output/milk-box/train/ours_30000/object.urdf"
+    obj_urdf_path = f"diff_rendering/gaussian_splatting_2d/output/{all_args.data_args.object_name}/train/ours_30000/object.urdf"
     ee_urdf_path = "./envs/asset/franka_ee/ee.urdf"
 
     plane_mesh = trimesh.load(plane_mesh_path)
@@ -279,7 +279,7 @@ def test_dynamic_train(all_args):
             obj_trans = torch.tensor(transformation_matrix[:3,3],device=simulator.device, dtype=torch.float32)
             ee_quat = torch.tensor(dynamic_train_dataset["frame_data"][0]["ee_quat_wxyz"],device=simulator.device, dtype=torch.float32)
             ee_trans = torch.tensor(dynamic_train_dataset["frame_data"][0]["ee_trans"],device=simulator.device, dtype=torch.float32)
-            obj_id, ee_id = create_push_scene(builder, simulator, obj_trans, obj_quat, ee_trans, ee_quat)
+            obj_id, ee_id = create_push_scene(all_args, builder, simulator, obj_trans, obj_quat, ee_trans, ee_quat)
             obj_position,obj_rotation = simulator.get_body_pose_clone(obj_id)
             gaussians = builder.build_static_2dgs()
             gaussians.translate2localframe(torch.tensor([0,0,0], device=sim_device),torch.tensor([1,0,0,0], device=sim_device))

@@ -1,0 +1,18 @@
+sys_args:
+  seed: 0
+  output_path: './output/small-cup'
+data_args:
+  white_background: True
+  train_ratio: 1.0
+  data_path: 'dataset/small-cup-pinwm'
+  object_name: 'small-cup'
+render_args:
+  sh_degree: 3
+sim_args:
+  dtime: 0.004166666666666667
+  frame_dt: 0.041666666666666664
+  train_iteration: 100
+  save_iteration: 10
+  opt_interval_num: 8
+
+policy_args:
