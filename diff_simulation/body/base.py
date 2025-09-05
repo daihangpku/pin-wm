@@ -11,7 +11,7 @@ import pybullet as p
 
 class Body(metaclass=ABCMeta):
     def __init__(self,collision_geom,visual_geom,physical_materials:Physical_Materials,
-                 urdf,world_position,world_rotation,device) :
+                 urdf,world_position,world_rotation,device, with_gravity=True) :
         self.id = None
         self.collision_geom = collision_geom # for ode collision detection
         if urdf is not None:
@@ -40,7 +40,9 @@ class Body(metaclass=ABCMeta):
 
         self.forces = []
         self.apply_positions = []
-        self.add_gravity()
+        self.with_gravity = with_gravity
+        if self.with_gravity:
+            self.add_gravity()
 
         # for reset
         self.init_world_position = self.world_position.clone()
@@ -79,7 +81,8 @@ class Body(metaclass=ABCMeta):
         self.angular_velocity = torch.zeros((3),device=self.device)
         self.forces = []
         self.apply_positions = []
-        self.add_gravity()
+        if self.with_gravity:
+            self.add_gravity()
 
     def add_gravity(self):
         gravity = Constant_Force(

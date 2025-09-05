@@ -190,9 +190,9 @@ class Simulator(object):
         body = self.get_body(body_id)
         body.change_vel(linear_velocity,angular_velocity)
         
-    def create_mesh_body(self,mesh,physical_materials,urdf,requires_grad,world_position=None,world_rotation=None):
+    def create_mesh_body(self,mesh,physical_materials,urdf,requires_grad,world_position=None,world_rotation=None,with_gravity=True):
         from diff_simulation.body.body_mesh import Body_Mesh
-        body = Body_Mesh(mesh,physical_materials,urdf,requires_grad,self.device,world_position,world_rotation)
+        body = Body_Mesh(mesh,physical_materials,urdf,requires_grad,self.device,world_position,world_rotation,with_gravity)
         body_id = self.add_body(body)
         return body_id
 

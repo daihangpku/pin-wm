@@ -1,0 +1,4 @@
+[submodule "simulation/curobo"]
+	path = simulation/curobo
+	url = https://github.com/NVlabs/curobo.git
+
